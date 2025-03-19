@@ -14,10 +14,11 @@ HEIGHT = 820
 river_words = ['楚', '河', '漢', '界']
 
 class Game:
-    def __init__(self, root, board):
+    def __init__(self, root, board, mode):        
         # Initialize the interface
         self.root = root
         self.root.title('Xiangqi')
+        self.board = board
 
         # Get screen's size
         screen_width = root.winfo_screenwidth()
@@ -29,10 +30,12 @@ class Game:
 
         # Set window's position
         root.geometry(f'{WIDTH}x{HEIGHT}+{x_position}+{y_position}')
-        
+
         self.board = board
         self.selected_piece = None
         self.turn = 'r'
+        self.root = root
+        self.mode = mode
 
         # Create sound's effect
         pygame.mixer.init()
@@ -204,7 +207,9 @@ class Game:
         # Move the piece
         self.move_piece(piece, row, col) 
 
-        self.turn = 'b' if self.turn == 'r' else 'r'
+        if self.mode == 'human':
+            self.turn = 'b' if self.turn == 'r' else 'r'
+
         self.draw_board()
 
     def move_piece(self, piece, row, col):
