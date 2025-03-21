@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-from classes.game import Game
+from classes.game_human import Game_Human
+from classes.game_ai import Game_AI
 
 WIDTH = 1200
 HEIGHT = 628
@@ -36,14 +37,14 @@ class Menu:
 
         # Set Button
         tk.Button(root, text = 'Play with human', command = self.play_with_human, font = ('Arial', 30)).pack(pady = 30)
-        tk.Button(root, text = 'Play with Fairy Stockfish', command = self.play_with_ai, font = ('Arial', 30)).pack(pady = 30)
+        tk.Button(root, text = 'Play with Pikafish', command = self.play_with_ai, font = ('Arial', 30)).pack(pady = 30)
 
     def play_with_human(self):
         self.root.destroy()  # Close menu
         root = tk.Tk()  # Create a new window for the board
-        Game(root, self.board, mode = 'human')  # Open human mode
+        Game_Human(root, self.board)  # Open human mode
 
     def play_with_ai(self):
         self.root.destroy()  # Close menu
         root = tk.Tk()  # Create a new window for the board
-        Game(root, self.board, mode = 'ai')  # Open AI mode
+        Game_AI(root, self.board)  # Open AI mode

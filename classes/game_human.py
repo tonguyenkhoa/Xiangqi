@@ -13,8 +13,8 @@ WIDTH = 740
 HEIGHT = 820
 river_words = ['楚', '河', '漢', '界']
 
-class Game:
-    def __init__(self, root, board, mode):        
+class Game_Human:
+    def __init__(self, root, board):        
         # Initialize the interface
         self.root = root
         self.root.title('Xiangqi')
@@ -34,8 +34,6 @@ class Game:
         self.board = board
         self.selected_piece = None
         self.turn = 'r'
-        self.root = root
-        self.mode = mode
 
         # Create sound's effect
         pygame.mixer.init()
@@ -207,8 +205,7 @@ class Game:
         # Move the piece
         self.move_piece(piece, row, col) 
 
-        if self.mode == 'human':
-            self.turn = 'b' if self.turn == 'r' else 'r'
+        self.turn = 'b' if self.turn == 'r' else 'r'
 
         self.draw_board()
 
