@@ -19,7 +19,7 @@ class Game_Human:
         self.root = root
         self.root.title('Xiangqi')
         self.board = board
-
+        
         # Get screen's size
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
@@ -34,6 +34,12 @@ class Game_Human:
         self.board = board
         self.selected_piece = None
         self.turn = 'r'
+        self.pre_row = None
+        self.pre_col = None
+        self.pre_piece = None
+        root.bind('<Control-z>', self.undo)
+        root.bind('<Control-r>', self.red_surrender)
+        root.bind('<Control-b>', self.black_surrender)
 
         # Create sound's effect
         pygame.mixer.init()
@@ -166,6 +172,9 @@ class Game_Human:
             piece = self.board.grid[row][col]
             if self.selected_piece:
                 if self.is_valid_move(self.selected_piece, row, col):
+                    self.pre_piece = self.selected_piece
+                    self.pre_row = self.selected_piece.x
+                    self.pre_col = self.selected_piece.y
                     self.complete_move(self.selected_piece, row, col)
                     if self.is_checkmated():
                         self.end_sound.play()
@@ -181,6 +190,23 @@ class Game_Human:
                 if piece and piece.color == self.turn:
                         self.selected_piece = piece
                         self.draw_oval(self.get_prime_valid_moves(piece))
+
+    def undo(self, event = None):
+        if self.pre_piece is not None:
+            self.complete_move(self.pre_piece, self.pre_row, self.pre_col)
+            self.pre_piece = None
+            self.pre_row = None
+            self.pre_col = None
+
+    def red_surrender(self, event = None):
+        self.end_sound.play()
+        messagebox.showinfo('Result', f'Black is the winner!')
+        self.root.quit()
+
+    def black_surrender(self, event = None):
+        self.end_sound.play()
+        messagebox.showinfo('Result', f'Red is the winner!')
+        self.root.quit()
 
     def get_prime_valid_moves(self, piece):
         tmp_valid_moves = []

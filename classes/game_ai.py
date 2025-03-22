@@ -1,6 +1,7 @@
 import math
 import tkinter as tk
 import pygame
+import copy
 from PIL import Image, ImageTk
 from tkinter import messagebox
 from classes.ai import AI
@@ -38,6 +39,9 @@ class Game_AI:
         self.selected_piece = None
         self.ai = AI(engine_path, self.level)
         self.turn = 'r'
+        self.pre_grid = None
+        root.bind('<Control-z>', self.undo)
+        root.bind('<Control-s>', self.surrender)
 
         # Create sound's effect
         pygame.mixer.init()
@@ -171,10 +175,11 @@ class Game_AI:
             piece = self.board.grid[row][col]
             if self.selected_piece:
                 if self.is_valid_move(self.selected_piece, row, col):
+                    self.pre_grid = copy.deepcopy(self.board.grid)
                     self.complete_move(self.selected_piece, row, col)
                     if self.is_checkmated():
                         self.another_end_sound.play()
-                        messagebox.showinfo('Result', f'You lose!')
+                        messagebox.showinfo('Result', f'You lose! You need to try harder next time!')
                         self.root.quit()
                 else:
                     if piece and piece.color == self.selected_piece.color:
@@ -185,6 +190,17 @@ class Game_AI:
                 if piece and piece.color == self.turn:
                         self.selected_piece = piece
                         self.draw_oval(self.get_prime_valid_moves(piece))
+
+    def undo(self, event = None):
+        if self.pre_grid is not None:
+            self.board.grid = copy.deepcopy(self.pre_grid)
+            self.pre_grid = None
+            self.draw_board()
+
+    def surrender(self, event = None):
+        self.another_end_sound.play()
+        messagebox.showinfo('Result', f'You lose! You need to try harder next time!')
+        self.root.quit()
 
     def get_prime_valid_moves(self, piece):
         tmp_valid_moves = []
@@ -236,7 +252,7 @@ class Game_AI:
     def is_the_game_over(self, row, col):
         if self.board.grid[row][col] and self.board.grid[row][col].type == 'General' and self.board.grid[row][col].color == 'b':
             self.end_sound.play()
-            messagebox.showinfo('Result', f'Red is the winner!')
+            messagebox.showinfo('Result', f'You win! Congratulation!')
             self.root.quit()
     
     def will_general_be_irradiated_after_transfer(self, piece, new_x, new_y):
