@@ -16,11 +16,12 @@ river_words = ['楚', '河', '漢', '界']
 engine_path = '/home/mihari/CODE/Python/Xiangqi/pikafish_ai/Pikafish/src/pikafish'
 
 class Game_AI:
-    def __init__(self, root, board):        
+    def __init__(self, root, board, level):        
         # Initialize the interface
         self.root = root
         self.root.title('Xiangqi')
         self.board = board
+        self.level = level
 
         # Get screen's size
         screen_width = root.winfo_screenwidth()
@@ -35,7 +36,7 @@ class Game_AI:
 
         self.board = board
         self.selected_piece = None
-        self.ai = AI(engine_path)
+        self.ai = AI(engine_path, self.level)
         self.turn = 'r'
 
         # Create sound's effect
@@ -205,8 +206,6 @@ class Game_AI:
         # Move the piece
         self.move_piece(piece, row, col) 
 
-        print(self.grid_to_fen(self.board.grid))
-
         self.draw_board()
         self.window = tk.Tk()
         self.window.update()
@@ -235,7 +234,7 @@ class Game_AI:
             self.move_self_sound.play()
 
     def is_the_game_over(self, row, col):
-        if self.board.grid[row][col] and self.board.grid[row][col].type == 'General':  
+        if self.board.grid[row][col] and self.board.grid[row][col].type == 'General' and self.board.grid[row][col].color == 'b':
             self.end_sound.play()
             messagebox.showinfo('Result', f'Red is the winner!')
             self.root.quit()

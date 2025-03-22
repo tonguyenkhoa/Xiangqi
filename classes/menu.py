@@ -6,12 +6,14 @@ from classes.game_ai import Game_AI
 WIDTH = 1200
 HEIGHT = 628
 
+
 class Menu:
     def __init__(self, root, board):
         # Initialize the interface
         self.root = root
         self.root.title('Xiangqi')
         self.board = board
+        self.level = None
 
         # Get screen's size
         screen_width = root.winfo_screenwidth()
@@ -45,6 +47,20 @@ class Menu:
         Game_Human(root, self.board)  # Open human mode
 
     def play_with_ai(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+        # Set background image
+        self.bg_label = tk.Label(self.root, image = self.bg_photo)
+        self.bg_label.place(relwidth = 1, relheight = 1)
+        tk.Label(self.root, text = "SELECT LEVEL", font = ('Arial', 40)).pack(pady = 40)
+        tk.Button(self.root, text = 'Easy', command = lambda: self.set_level('go depth 1\n'), font = ('Arial', 30)).pack(pady = 20)
+        tk.Button(self.root, text = 'Medium', command =  lambda: self.set_level('go depth 3\n'), font = ('Arial', 30)).pack(pady = 20)
+        tk.Button(self.root, text = 'Hard', command = lambda: self.set_level('go depth 5\n'), font = ('Arial', 30)).pack(pady = 20)
+        tk.Button(self.root, text = 'Very hard', command = lambda: self.set_level('go depth 7\n'), font = ('Arial', 30)).pack(pady = 20)
+
+    def set_level(self, difficult):
+        self.level = difficult
         self.root.destroy()  # Close menu
-        root = tk.Tk()  # Create a new window for the board
-        Game_AI(root, self.board)  # Open AI mode
+        root = tk.Tk()  # Create a new window to select AI's level
+        Game_AI(root, self.board, self.level)  # Open AI mode

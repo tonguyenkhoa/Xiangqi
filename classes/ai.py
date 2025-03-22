@@ -4,8 +4,9 @@ import time
 engine_path = '/home/mihari/CODE/Python/Xiangqi/pikafish_ai/Pikafish/src/pikafish'
 
 class AI:
-    def __init__(self, engine_path):
+    def __init__(self, engine_path, level):
         self.engine_path = engine_path
+        self.level = level
 
     def get_ai_move(self, fen):
         process = subprocess.Popen(
@@ -18,7 +19,7 @@ class AI:
 
         # Send command to engine
         process.stdin.write(f'position fen {fen}\n')
-        process.stdin.write('go depth 20\n')
+        process.stdin.write(f'{self.level}')
         process.stdin.flush()
         time.sleep(1)
 
