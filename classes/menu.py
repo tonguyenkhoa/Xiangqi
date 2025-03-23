@@ -6,7 +6,6 @@ from classes.game_ai import Game_AI
 WIDTH = 1200
 HEIGHT = 628
 
-
 class Menu:
     def __init__(self, root, board):
         # Initialize the interface
