@@ -1,6 +1,7 @@
 import math
 import tkinter as tk
 import pygame
+import copy
 from PIL import Image, ImageTk
 from tkinter import messagebox
 
@@ -34,9 +35,7 @@ class Game_Human:
         self.board = board
         self.selected_piece = None
         self.turn = 'r'
-        self.pre_row = None
-        self.pre_col = None
-        self.pre_piece = None
+        self.pre_grid = None
         root.bind('<Control-z>', self.undo)
         root.bind('<Control-r>', self.red_surrender)
         root.bind('<Control-b>', self.black_surrender)
@@ -172,9 +171,7 @@ class Game_Human:
             piece = self.board.grid[row][col]
             if self.selected_piece:
                 if self.is_valid_move(self.selected_piece, row, col):
-                    self.pre_piece = self.selected_piece
-                    self.pre_row = self.selected_piece.x
-                    self.pre_col = self.selected_piece.y
+                    self.pre_grid = copy.deepcopy(self.board.grid)
                     self.complete_move(self.selected_piece, row, col)
                     if self.is_checkmated():
                         self.end_sound.play()
@@ -192,11 +189,11 @@ class Game_Human:
                         self.draw_oval(self.get_prime_valid_moves(piece))
 
     def undo(self, event = None):
-        if self.pre_piece is not None:
-            self.complete_move(self.pre_piece, self.pre_row, self.pre_col)
-            self.pre_piece = None
-            self.pre_row = None
-            self.pre_col = None
+        if self.pre_grid is not None:
+            self.board.grid = copy.deepcopy(self.pre_grid)
+            self.draw_board()
+            self.pre_grid = None
+            self.turn = 'b' if self.turn == 'r' else 'r'
 
     def red_surrender(self, event = None):
         self.end_sound.play()
@@ -238,7 +235,7 @@ class Game_Human:
     def move_piece(self, piece, row, col):
         sound = 0 if self.board.grid[row][col] else 1
         self.board.grid[piece.x][piece.y] = None  
-        piece.x, piece.y = row, col  
+        piece.x, piece.y = row, col 
         self.board.grid[row][col] = piece  
         self.selected_piece = None
         if sound == 0:

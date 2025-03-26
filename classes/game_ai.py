@@ -194,9 +194,9 @@ class Game_AI:
     def undo(self, event = None):
         if self.pre_grid is not None:
             self.board.grid = copy.deepcopy(self.pre_grid)
-            self.pre_grid = None
             self.draw_board()
-
+            self.pre_grid = None
+            
     def surrender(self, event = None):
         self.another_end_sound.play()
         messagebox.showinfo('Result', f'You lose! You need to try harder next time!')
@@ -227,16 +227,17 @@ class Game_AI:
         self.window.update()
         self.window.destroy()
 
-        # Check if the game is over
-        self.is_the_game_over(row, col)
-
         # AI's turn
         fen = self.grid_to_fen(self.board.grid)
         best_move = self.ai.get_ai_move(fen)
-        f_row, f_col, t_row, t_col = self.fen_to_grid(best_move)
-        self.move_piece(self.board.grid[f_row][f_col], t_row, t_col)
-        
-        self.draw_board()
+        if best_move is None:
+            self.end_sound.play()
+            messagebox.showinfo('Result', f'You win! Congratulation!')
+            self.root.quit()
+        else:
+            f_row, f_col, t_row, t_col = self.fen_to_grid(best_move)
+            self.move_piece(self.board.grid[f_row][f_col], t_row, t_col)
+            self.draw_board()
 
     def move_piece(self, piece, row, col):
         sound = 0 if self.board.grid[row][col] else 1
@@ -249,11 +250,11 @@ class Game_AI:
         else:
             self.move_self_sound.play()
 
-    def is_the_game_over(self, row, col):
-        if self.board.grid[row][col] and self.board.grid[row][col].type == 'General' and self.board.grid[row][col].color == 'b':
-            self.end_sound.play()
-            messagebox.showinfo('Result', f'You win! Congratulation!')
-            self.root.quit()
+    # def is_the_game_over(self, row, col):
+    #     if self.board.grid[row][col] and self.board.grid[row][col].type == 'General' and self.board.grid[row][col].color == 'b':
+    #         self.end_sound.play()
+    #         messagebox.showinfo('Result', f'You win! Congratulation!')
+    #         self.root.quit()
     
     def will_general_be_irradiated_after_transfer(self, piece, new_x, new_y):
         old_x, old_y = piece.x, piece.y

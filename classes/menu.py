@@ -53,10 +53,14 @@ class Menu:
         self.bg_label = tk.Label(self.root, image = self.bg_photo)
         self.bg_label.place(relwidth = 1, relheight = 1)
         tk.Label(self.root, text = "SELECT LEVEL", font = ('Arial', 40)).pack(pady = 40)
-        tk.Button(self.root, text = 'Easy', command = lambda: self.set_level('go depth 1\n'), font = ('Arial', 30)).pack(pady = 20)
-        tk.Button(self.root, text = 'Medium', command =  lambda: self.set_level('go depth 2\n'), font = ('Arial', 30)).pack(pady = 20)
-        tk.Button(self.root, text = 'Hard', command = lambda: self.set_level('go depth 3\n'), font = ('Arial', 30)).pack(pady = 20)
-        tk.Button(self.root, text = 'Very hard', command = lambda: self.set_level('go depth 4\n'), font = ('Arial', 30)).pack(pady = 20)
+        # tk.Button(self.root, text = 'Easy', command = lambda: self.set_level('setoption name MultiPV value 3\n'), font = ('Arial', 30)).pack(pady = 20)
+        # tk.Button(self.root, text = 'Medium', command =  lambda: self.set_level('setoption name MultiPV value 2\n'), font = ('Arial', 30)).pack(pady = 20)
+        # tk.Button(self.root, text = 'Hard', command = lambda: self.set_level('setoption name MultiPV value 1\n'), font = ('Arial', 30)).pack(pady = 20)
+        # tk.Button(self.root, text = 'Very hard', command = lambda: self.set_level('setoption name MultiPV value 0\n'), font = ('Arial', 30)).pack(pady = 20)
+        tk.Button(self.root, text = 'Medium', command = lambda: self.set_level('go depth 1\n'), font = ('Arial', 30)).pack(pady = 20)
+        tk.Button(self.root, text = 'Hard', command =  lambda: self.set_level('go depth 2\n'), font = ('Arial', 30)).pack(pady = 20)
+        tk.Button(self.root, text = 'Very hard', command = lambda: self.set_level('go depth 3\n'), font = ('Arial', 30)).pack(pady = 20)
+        tk.Button(self.root, text = 'Impossible', command = lambda: self.set_level('go depth 4\n'), font = ('Arial', 30)).pack(pady = 20)
 
     def set_level(self, difficult):
         self.level = difficult
